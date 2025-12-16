@@ -1,11 +1,13 @@
-﻿#include <iostream>
+#include <iostream>
+#include <time.h>
 #include <Windows.h>
 
+
+int counts[3];
 
 void increment() {
     int i = 0;
     while (true) {
-        std::cout << i << "Инкремент - ID: " << ID << "Итерация: " <<  << std::endl;
         i++;
         Sleep(1000);
     }
@@ -49,6 +51,17 @@ int main()
     threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)increment, NULL, NULL, &IDthread[0]);
     threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)febonaci, NULL, NULL, &IDthread[1]);
     threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)fact, NULL, NULL, &IDthread[2]);
+
+    if (!SetPriorityClass(threads[0], IDLE_PRIORITY_CLASS)) {
+        std::cout << "Ошибка" << std::endl;
+    }
+    if (!SetPriorityClass(threads[1], NORMAL_PRIORITY_CLASS)) {
+        std::cout << "Ошибка" << std::endl;
+    }
+    if (!SetPriorityClass(threads[2], HIGH_PRIORITY_CLASS)) {
+        std::cout << "Ошибка" << std::endl;
+    }
+
 
     WaitForSingleObject(threads[0], INFINITE);
     WaitForSingleObject(threads[1], INFINITE);
