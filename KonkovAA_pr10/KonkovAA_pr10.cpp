@@ -37,7 +37,7 @@ void fact() {
         counts[2]++;
     }
 }
-
+//сделать нагрузчик
 void count_iter(HANDLE thread, int id) {
 
     SuspendThread(thread);
@@ -61,6 +61,7 @@ void users() {
     bool f = true;
     while (f) {
         std::cin >> user;
+        //выполнять действия
         switch (user)
         {
         case 0:
@@ -101,6 +102,7 @@ void logs() {
     if (!SetThreadPriority(logThread, THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
     while (true) {
+        //вывод текущего приоритета 
         Sleep(1000);
         system("cls");
         std::cout << "Лог: " << std::endl;
