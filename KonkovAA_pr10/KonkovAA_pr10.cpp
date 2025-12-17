@@ -6,6 +6,8 @@
 int counts[3]{0, 0, 0};
 
 HANDLE threads[3];
+HANDLE logThread;
+HANDLE userThread;
 
 void increment() {
     int i = 0;
@@ -62,6 +64,11 @@ void users() {
         switch (user)
         {
         case 0:
+            CloseHandle(threads[0]);
+            CloseHandle(threads[1]);
+            CloseHandle(threads[2]);
+            CloseHandle(logThread);
+            CloseHandle(userThread);
             f = false;
             break;
         case 1:
@@ -90,7 +97,6 @@ void users() {
 
 void logs() {
     int user = 0;
-    HANDLE userThread;
     userThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)users, NULL, NULL, NULL);
     while (true) {
         Sleep(1000);
@@ -116,6 +122,7 @@ void logs() {
         std::cout << std::endl;
 
     }
+    WaitForSingleObject(userThread, INFINITE);
 }
 
 
@@ -126,8 +133,6 @@ int main() {
     threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)increment, NULL, NULL, NULL);
     threads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)febonaci, NULL, NULL, NULL);
     threads[2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)fact, NULL, NULL, NULL);
-
-    HANDLE logThread;
     logThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)logs, NULL, NULL, NULL);
 
     if (!SetThreadPriority(threads[0], THREAD_PRIORITY_HIGHEST))
