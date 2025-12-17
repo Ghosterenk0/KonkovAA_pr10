@@ -98,6 +98,8 @@ void users() {
 void logs() {
     int user = 0;
     userThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)users, NULL, NULL, NULL);
+    if (!SetThreadPriority(logThread, THREAD_PRIORITY_IDLE))
+        std::cout << "Ошибка" << std::endl;
     while (true) {
         Sleep(1000);
         system("cls");
