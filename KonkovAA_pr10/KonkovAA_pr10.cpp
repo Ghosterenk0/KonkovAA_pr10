@@ -113,6 +113,12 @@ void users() {
     }
 }
 
+void statusThread() {
+    std::cout << "1 Поток - " << std::endl;
+    std::cout << "2 Поток - " << std::endl;
+    std::cout << "3 Поток - " << std::endl;
+}
+
 void logs() {
     int user = 0;
     userThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)users, NULL, NULL, NULL);
