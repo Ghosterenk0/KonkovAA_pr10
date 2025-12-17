@@ -3,27 +3,26 @@
 #include <Windows.h>
 
 
-int counts[3];
+int counts[3]{0, 0, 0};
+
+HANDLE threads[3];
 
 void increment() {
     int i = 0;
     while (true) {
         i++;
-        Sleep(1000);
+        counts[0]++;
     }
 }
 
 void febonaci() {
     auto start = 0;
     auto second = 1;
-    std::cout << start << std::endl;
-    std::cout << second << std::endl;
     while (true) {
-        std::cout << start + second << std::endl;
         auto tmp = start;
         start = second;
         second += tmp;
-        Sleep(1000);
+        counts[1]++;
     }
 }
 
@@ -33,37 +32,117 @@ void fact() {
     while (true) {
         num++;
         fact *= num;
-        std::cout << num << std::endl;
+        counts[2]++;
+    }
+}
+
+void count_iter(HANDLE thread, int id) {
+
+    SuspendThread(thread);
+    if (id == 0) {
+        std::cout << "Поток " << id << " - кол-во итерцаий: " << counts[0] << std::endl;
+        counts[0] = 0;
+    }
+    else if (id == 1) {
+        std::cout << "Поток " << id << " - кол-во итерцаий: " << counts[1] << std::endl;
+        counts[1] = 0;
+    }
+    else if (id == 2) {
+        std::cout << "Поток " << id << " - кол-во итерцаий: " << counts[2] << std::endl;
+        counts[2] = 0;
+    }
+    ResumeThread(thread);
+
+}
+void users() {
+    int user = 0;
+    bool f = true;
+    while (f) {
+        std::cin >> user;
+        switch (user)
+        {
+        case 0:
+            f = false;
+            break;
+        case 1:
+            break;
+        case 2:
+            break;
+        case 3:
+            break;
+        case 4:
+            break;
+        case 5:
+            break;
+        case 6:
+            break;
+        case 7:
+            break;
+        case 8:
+            break;
+        case 9:
+            break;
+        default:
+            break;
+        }
+    }
+}
+
+void logs() {
+    int user = 0;
+    HANDLE userThread;
+    userThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)users, NULL, NULL, NULL);
+    while (true) {
         Sleep(1000);
+        system("cls");
+        std::cout << "Лог: " << std::endl;
+        count_iter(threads[0], 0);
+        count_iter(threads[1], 1);
+        count_iter(threads[2], 2);
+        std::cout << "Выберете действие: " << std::endl;
+        std::cout << "1. Поток 1 фоновый приоритет" << std::endl;
+        std::cout << "2. Поток 2 фоновый приоритет" << std::endl;
+        std::cout << "3. Поток 3 фоновый приоритет" << std::endl;
+        std::cout << std::endl;
+        std::cout << "4. Поток 1 нормальный приоритет" << std::endl;
+        std::cout << "5. Поток 2 нормальный приоритет" << std::endl;
+        std::cout << "6. Поток 3 нормальный приоритет" << std::endl;
+        std::cout << std::endl;
+        std::cout << "7. Поток 1 высокий приоритет" << std::endl;
+        std::cout << "8. Поток 2 высокий приоритет" << std::endl;
+        std::cout << "9. Поток 3 высокий приоритет" << std::endl;
+        std::cout << std::endl;
+        std::cout << "0. Выход" << std::endl;
+        std::cout << std::endl;
+
     }
 }
 
 
-int main()
-{
-    HANDLE threads[3];
-    DWORD IDthread[3];
+int main() {
 
-    IDthread[0] = 111;
-    IDthread[1] = 121;
-    IDthread[2] = 131;
+    setlocale(LC_ALL, "ru");
 
-    threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)increment, NULL, NULL, &IDthread[0]);
-    threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)febonaci, NULL, NULL, &IDthread[1]);
-    threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)fact, NULL, NULL, &IDthread[2]);
+    threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)increment, NULL, NULL, NULL);
+    threads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)febonaci, NULL, NULL, NULL);
+    threads[2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)fact, NULL, NULL, NULL);
 
-    if (!SetPriorityClass(threads[0], IDLE_PRIORITY_CLASS)) {
+    HANDLE logThread;
+    logThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)logs, NULL, NULL, NULL);
+
+    if (!SetThreadPriority(threads[0], THREAD_PRIORITY_HIGHEST))
         std::cout << "Ошибка" << std::endl;
-    }
-    if (!SetPriorityClass(threads[1], NORMAL_PRIORITY_CLASS)) {
+    if (!SetThreadPriority(threads[1], THREAD_PRIORITY_LOWEST)) 
         std::cout << "Ошибка" << std::endl;
-    }
-    if (!SetPriorityClass(threads[2], HIGH_PRIORITY_CLASS)) {
+    if (!SetThreadPriority(threads[2], THREAD_PRIORITY_NORMAL)) 
         std::cout << "Ошибка" << std::endl;
-    }
+    if(!SetThreadPriority(logThread, THREAD_PRIORITY_IDLE))
+        std::cout << "Ошибка" << std::endl;
 
+    
 
     WaitForSingleObject(threads[0], INFINITE);
     WaitForSingleObject(threads[1], INFINITE);
     WaitForSingleObject(threads[2], INFINITE);
+    WaitForSingleObject(logThread, INFINITE);
 }
