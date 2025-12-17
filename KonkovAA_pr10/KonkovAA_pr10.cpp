@@ -37,7 +37,7 @@ void fact() {
         counts[2]++;
     }
 }
-//сделать нагрузчик
+
 void count_iter(HANDLE thread, int id) {
 
     SuspendThread(thread);
@@ -61,7 +61,6 @@ void users() {
     bool f = true;
     while (f) {
         std::cin >> user;
-        //выполнять действия
         switch (user)
         {
         case 0:
@@ -73,22 +72,40 @@ void users() {
             f = false;
             break;
         case 1:
+            if (!SetThreadPriority(threads[0], THREAD_PRIORITY_IDLE))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 2:
+            if (!SetThreadPriority(threads[1], THREAD_PRIORITY_IDLE))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 3:
+            if (!SetThreadPriority(threads[2], THREAD_PRIORITY_IDLE))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 4:
+            if (!SetThreadPriority(threads[0], THREAD_PRIORITY_NORMAL))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 5:
+            if (!SetThreadPriority(threads[1], THREAD_PRIORITY_NORMAL))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 6:
+            if (!SetThreadPriority(threads[2], THREAD_PRIORITY_NORMAL))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 7:
+            if (!SetThreadPriority(threads[0], THREAD_PRIORITY_HIGHEST))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 8:
+            if (!SetThreadPriority(threads[1], THREAD_PRIORITY_HIGHEST))
+                std::cout << "Ошибка" << std::endl;
             break;
         case 9:
+            if (!SetThreadPriority(threads[2], THREAD_PRIORITY_HIGHEST))
+                std::cout << "Ошибка" << std::endl;
             break;
         default:
             break;
@@ -102,7 +119,6 @@ void logs() {
     if (!SetThreadPriority(logThread, THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
     while (true) {
-        //вывод текущего приоритета 
         Sleep(1000);
         system("cls");
         std::cout << "Лог: " << std::endl;
