@@ -64,11 +64,11 @@ void users() {
         switch (user)
         {
         case 0:
-            CloseHandle(threads[0]);
-            CloseHandle(threads[1]);
-            CloseHandle(threads[2]);
-            CloseHandle(logThread);
-            CloseHandle(userThread);
+            TerminateThread(threads[0], 0);
+            TerminateThread(threads[1], 0);
+            TerminateThread(threads[2], 0);
+            TerminateThread(logThread, 0);
+            TerminateThread(userThread, 0);
             f = false;
             break;
         case 1:
