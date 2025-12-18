@@ -45,6 +45,7 @@ void loaderF() {
         std::cout << "Ошибка" << std::endl;
     if (!SetThreadPriority(threads[2], THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
+    Sleep(5000);
     if (!SetThreadPriority(loader, THREAD_PRIORITY_NORMAL))
         std::cout << "Ошибка" << std::endl;
 }
