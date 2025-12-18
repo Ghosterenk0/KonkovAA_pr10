@@ -3,11 +3,12 @@
 #include <Windows.h>
 
 
-int counts[3]{0, 0, 0};
+int counts[3]{ 0, 0, 0 };
 
 HANDLE threads[3];
 HANDLE logThread;
 HANDLE userThread;
+HANDLE loader;
 
 void increment() {
     int i = 0;
@@ -37,7 +38,16 @@ void fact() {
         counts[2]++;
     }
 }
-
+void loaderF() {
+    if (!SetThreadPriority(threads[0], THREAD_PRIORITY_IDLE))
+        std::cout << "Ошибка" << std::endl;
+    if (!SetThreadPriority(threads[1], THREAD_PRIORITY_IDLE))
+        std::cout << "Ошибка" << std::endl;
+    if (!SetThreadPriority(threads[2], THREAD_PRIORITY_IDLE))
+        std::cout << "Ошибка" << std::endl;
+    if (!SetThreadPriority(loader, THREAD_PRIORITY_NORMAL))
+        std::cout << "Ошибка" << std::endl;
+}
 void count_iter(HANDLE thread, int id) {
 
     SuspendThread(thread);
@@ -107,6 +117,15 @@ void users() {
             if (!SetThreadPriority(threads[2], THREAD_PRIORITY_HIGHEST))
                 std::cout << "Ошибка" << std::endl;
             break;
+        case 11:
+            loader = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)loaderF, NULL, NULL, NULL);
+            if (!SetThreadPriority(loader, THREAD_PRIORITY_HIGHEST))
+                std::cout << "Ошибка" << std::endl;
+            if (GetThreadPriority(threads[0]) == -15 && GetThreadPriority(threads[1]) == -15 && GetThreadPriority(threads[2]) == -15) {
+                if (!SetThreadPriority(loader, THREAD_PRIORITY_NORMAL))
+                    std::cout << "Ошибка" << std::endl;
+            }
+            break;
         default:
             break;
         }
@@ -114,9 +133,13 @@ void users() {
 }
 
 void statusThread() {
-    std::cout << "1 Поток - " << std::endl;
-    std::cout << "2 Поток - " << std::endl;
-    std::cout << "3 Поток - " << std::endl;
+    std::cout << "1 Поток - " << GetThreadPriority(threads[0]) << std::endl;
+    std::cout << "2 Поток - " << GetThreadPriority(threads[1]) << std::endl;
+    std::cout << "3 Поток - " << GetThreadPriority(threads[2]) << std::endl;
+    if (GetThreadPriority(loader) == 0 || GetThreadPriority(loader) == 2) 
+        std::cout << "Нагрузчик - " << GetThreadPriority(loader) << std::endl;
+    else 
+        std::cout << "Нагрузчик - неактивен" << std::endl;
 }
 
 void logs() {
@@ -127,6 +150,7 @@ void logs() {
     while (true) {
         Sleep(1000);
         system("cls");
+        statusThread();
         std::cout << "Лог: " << std::endl;
         count_iter(threads[0], 0);
         count_iter(threads[1], 1);
@@ -144,13 +168,14 @@ void logs() {
         std::cout << "8. Поток 2 высокий приоритет" << std::endl;
         std::cout << "9. Поток 3 высокий приоритет" << std::endl;
         std::cout << std::endl;
+        std::cout << "11. Вызывать нагрузчик" << std::endl;
+        std::cout << std::endl;
         std::cout << "0. Выход" << std::endl;
         std::cout << std::endl;
 
     }
     WaitForSingleObject(userThread, INFINITE);
 }
-
 
 int main() {
 
@@ -159,18 +184,18 @@ int main() {
     threads[0] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)increment, NULL, NULL, NULL);
     threads[1] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)febonaci, NULL, NULL, NULL);
     threads[2] = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)fact, NULL, NULL, NULL);
-    logThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)logs, NULL, NULL, NULL);
+    logThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)logs, NULL, NULL, NULL);    
 
-    if (!SetThreadPriority(threads[0], THREAD_PRIORITY_HIGHEST))
+    if (!SetThreadPriority(threads[0], THREAD_PRIORITY_BELOW_NORMAL))
         std::cout << "Ошибка" << std::endl;
-    if (!SetThreadPriority(threads[1], THREAD_PRIORITY_LOWEST)) 
+    if (!SetThreadPriority(threads[1], THREAD_PRIORITY_LOWEST))
         std::cout << "Ошибка" << std::endl;
-    if (!SetThreadPriority(threads[2], THREAD_PRIORITY_NORMAL)) 
+    if (!SetThreadPriority(threads[2], THREAD_PRIORITY_NORMAL))
         std::cout << "Ошибка" << std::endl;
-    if(!SetThreadPriority(logThread, THREAD_PRIORITY_IDLE))
+    if (!SetThreadPriority(logThread, THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
 
-    
+
 
     WaitForSingleObject(threads[0], INFINITE);
     WaitForSingleObject(threads[1], INFINITE);
