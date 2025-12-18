@@ -39,18 +39,16 @@ void fact() {
     }
 }
 void loaderF() {
-    if (!SetThreadPriority(loader, THREAD_PRIORITY_HIGHEST))
-        std::cout << "Ошибка" << std::endl;
+    SetThreadPriority(loader, THREAD_PRIORITY_HIGHEST);
     SetThreadPriorityBoost(loader, FALSE);
-    //SetThreadPriority(loader, THREAD_PRIORITY_HIGHEST);
-    Sleep(3000);
     if (!SetThreadPriority(threads[0], THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
     if (!SetThreadPriority(threads[1], THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
     if (!SetThreadPriority(threads[2], THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
-    
+    Sleep(3000);
+    SetThreadPriority(loader, THREAD_PRIORITY_NORMAL);
     SetThreadPriorityBoost(loader, TRUE);
 }
 void count_iter(HANDLE thread, int id) {
