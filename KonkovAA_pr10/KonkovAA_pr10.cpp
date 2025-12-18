@@ -139,11 +139,10 @@ void statusThread() {
     std::cout << "1 Поток - " << GetThreadPriority(threads[0]) << std::endl;
     std::cout << "2 Поток - " << GetThreadPriority(threads[1]) << std::endl;
     std::cout << "3 Поток - " << GetThreadPriority(threads[2]) << std::endl;
-    std::cout << "Нагрузчик - " << GetThreadPriority(loader) << std::endl;
-    /*if (GetThreadPriority(loader) == 0 || GetThreadPriority(loader) == 2) 
+    if (GetThreadPriority(loader) == 0 || GetThreadPriority(loader) == 2) 
         std::cout << "Нагрузчик - " << GetThreadPriority(loader) << std::endl;
     else 
-        std::cout << "Нагрузчик - неактивен" << std::endl;*/
+        std::cout << "Нагрузчик - неактивен" << std::endl;
 }
 
 void logs() {
