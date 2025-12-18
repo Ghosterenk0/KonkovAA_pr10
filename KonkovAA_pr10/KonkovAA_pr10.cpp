@@ -41,12 +41,6 @@ void fact() {
 void loaderF() {
     SetThreadPriority(loader, THREAD_PRIORITY_HIGHEST);
     SetThreadPriorityBoost(loader, FALSE);
-    if (!SetThreadPriority(threads[0], THREAD_PRIORITY_IDLE))
-        std::cout << "Ошибка" << std::endl;
-    if (!SetThreadPriority(threads[1], THREAD_PRIORITY_IDLE))
-        std::cout << "Ошибка" << std::endl;
-    if (!SetThreadPriority(threads[2], THREAD_PRIORITY_IDLE))
-        std::cout << "Ошибка" << std::endl;
     Sleep(3000);
     SetThreadPriority(loader, THREAD_PRIORITY_NORMAL);
     SetThreadPriorityBoost(loader, TRUE);
