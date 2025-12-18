@@ -39,15 +39,19 @@ void fact() {
     }
 }
 void loaderF() {
+    if (!SetThreadPriority(loader, THREAD_PRIORITY_HIGHEST))
+        std::cout << "Ошибка" << std::endl;
+    SetThreadPriorityBoost(loader, FALSE);
+    //SetThreadPriority(loader, THREAD_PRIORITY_HIGHEST);
+    Sleep(3000);
     if (!SetThreadPriority(threads[0], THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
     if (!SetThreadPriority(threads[1], THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
     if (!SetThreadPriority(threads[2], THREAD_PRIORITY_IDLE))
         std::cout << "Ошибка" << std::endl;
-    Sleep(5000);
-    if (!SetThreadPriority(loader, THREAD_PRIORITY_NORMAL))
-        std::cout << "Ошибка" << std::endl;
+    
+    SetThreadPriorityBoost(loader, TRUE);
 }
 void count_iter(HANDLE thread, int id) {
 
@@ -137,10 +141,11 @@ void statusThread() {
     std::cout << "1 Поток - " << GetThreadPriority(threads[0]) << std::endl;
     std::cout << "2 Поток - " << GetThreadPriority(threads[1]) << std::endl;
     std::cout << "3 Поток - " << GetThreadPriority(threads[2]) << std::endl;
-    if (GetThreadPriority(loader) == 0 || GetThreadPriority(loader) == 2) 
+    std::cout << "Нагрузчик - " << GetThreadPriority(loader) << std::endl;
+    /*if (GetThreadPriority(loader) == 0 || GetThreadPriority(loader) == 2) 
         std::cout << "Нагрузчик - " << GetThreadPriority(loader) << std::endl;
     else 
-        std::cout << "Нагрузчик - неактивен" << std::endl;
+        std::cout << "Нагрузчик - неактивен" << std::endl;*/
 }
 
 void logs() {
